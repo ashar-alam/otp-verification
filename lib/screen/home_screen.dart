@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:otp_verification/screen/otp_screen.dart';
+import 'package:otp_verification/service/auth/otp_verification.service.dart';
 
 import '../utils/string_manager.dart';
+import '../utils/utils.dart';
 
 class MyHomeScreen extends StatefulWidget {
   const MyHomeScreen({super.key});
@@ -11,6 +13,8 @@ class MyHomeScreen extends StatefulWidget {
 }
 
 class _MyHomeScreenState extends State<MyHomeScreen> {
+  String? phoneNumber;
+  GlobalKey<FormState> formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,6 +29,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(
+          key: formkey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -33,34 +38,75 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
                 StringManager.phoneNo,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              const TextField(
-                decoration: InputDecoration(hintText: StringManager.phoneNo),
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Number is Required";
+                  }
+                },
+                onSaved: (newValue) {
+                  phoneNumber = newValue!;
+                },
+                decoration: const InputDecoration(
+                    prefixText: "+91 |", hintText: StringManager.phoneNo),
               ),
-              const SizedBox(height: 20,),
-              OtpTextField(
-                numberOfFields: 5,
-                borderColor: const Color(0xFF512DA8),
-
-                showFieldAsBox: true,
-
-                onCodeChanged: (String code) {},
-
-                onSubmit: (String verificationCode) {
-                  showDialog(
-                    useSafeArea: false,
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          // elevation: 5,
-                          // actionsPadding:const EdgeInsets.symmetric(horizontal: 50.0) ,
-                          title: const Text("Verification Code"),
-                          content: Text('Code entered is $verificationCode'),
-                        );
-                      });
-                }, // end onSubmit
+              const SizedBox(
+                height: 20,
               ),
-              const SizedBox(height: 30,),
-              Center(child: ElevatedButton(onPressed: (){}, child: const Text(StringManager.submit)))
+              const SizedBox(
+                height: 30,
+              ),
+              SizedBox(
+                width: Utils.getWidth(context) / 1,
+                height: Utils.getHight(context) / 20,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  onPressed: () async {
+                    if (formkey.currentState!.validate()) {
+                      formkey.currentState!.save();
+                      OtpService.sendOtp("+91${phoneNumber!}");
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const MyOtpScreen(),
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text(StringManager.sendTheCode),
+                ),
+              ),
+              const Divider(
+                
+                thickness: 1,
+              ),
+              Center(
+                child: SizedBox(
+                  width: Utils.getWidth(context) / 1.5,
+                  height: Utils.getHight(context) / 15,
+                  child: Card(
+                    elevation: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children:const [
+                          Icon(Icons.add),
+                          Text(
+                            StringManager.google,
+                          ),
+                          
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              
             ],
           ),
         ),
