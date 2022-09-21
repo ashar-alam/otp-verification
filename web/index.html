@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -27,7 +28,7 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>otp_verification</title>
   <link rel="manifest" href="manifest.json">
@@ -39,20 +40,42 @@
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
 </head>
+
 <body>
   <script>
-    window.addEventListener('load', function(ev) {
+    window.addEventListener('load', function (ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         }
-      }).then(function(engineInitializer) {
+      }).then(function (engineInitializer) {
         return engineInitializer.initializeEngine();
-      }).then(function(appRunner) {
+      }).then(function (appRunner) {
         return appRunner.runApp();
       });
     });
   </script>
+  <script type="module">
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCgIyC3UaSC51_I0XPj1SSt9jHvMHtASAM",
+      authDomain: "otp-verification-b8bba.firebaseapp.com",
+      projectId: "otp-verification-b8bba",
+      storageBucket: "otp-verification-b8bba.appspot.com",
+      messagingSenderId: "1009209496328",
+      appId: "1:1009209496328:web:2deb0d8d63b5141a29d2bd"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+  </script>
 </body>
+
 </html>
